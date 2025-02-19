@@ -61,11 +61,8 @@ window.onload = () => {
 
   }
 
-
   const btnRecord = document.querySelector(".record");
     
-
-
   btnRecord.onclick = () => {
     if (!btnRecord.classList.contains("clicked")) {
       
