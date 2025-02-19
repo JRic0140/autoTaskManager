@@ -1,30 +1,34 @@
 
 var lList = [];
-var listen = false;
+// var listen = false;
 
 
 
+  // Add client
 function addClickEvent(event){
-
-  lList.push({
-    x:event.x,
-    y:event.y,
-    element:event.element,
-  })
-  console.log(lList);
+  
+  lList.push(event)
+  console.log(event);
+  // console.log(lList);
   
   document.querySelector(".event-num").innerHTML = lList.length
 }
 
-chrome.storage.onChanged.addListener(function (changes, namespace) {
+
+  // addClient event °change
+chrome.storage.onChanged.addListener(function (changes) {
   console.log(changes);
   
   if(changes.code != undefined) return
   if ( changes.event != undefined && changes.event.newValue == "click") return 
   if(changes.tag != undefined && changes.tag == "cp") {
-    console.log("cp");
     
+    console.log("cp");
     lList.push("cp")
+  }
+  if(changes.tag != undefined && changes.tag == "ls") {
+    console.log("ls");
+    lList.push("ls")
   }
   const data = JSON.parse(changes.event.newValue)
   console.log(data);
@@ -35,23 +39,34 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
         addClickEvent(data)
         
         break;
-    
+
       default:
         break;
     }
 });
 
-window.onload = () => {
-  document.querySelector(".begin").onclick = () => {
 
-    console.log(
-      lList
-    );
+window.onload = () => {
+  // document.querySelector(".begin").onclick = () => {
+
+  //   console.log(
+  //     lList
+  //   );
+
+  // getListEvent
+  document.querySelector(".get-list-event").onclick = ()=>{
+
+    console.log(lList);
+    
+
+  }
+
+
   const btnRecord = document.querySelector(".record");
     
 
 
-  btnRecord.onclick = (r) => {
+  btnRecord.onclick = () => {
     if (!btnRecord.classList.contains("clicked")) {
       
       chrome.storage.local.set({ code: "begin" }, function () {
@@ -65,10 +80,12 @@ window.onload = () => {
      
       chrome.storage.local.set({ code: "end" }, function () {
         listen = false;
-
         btnRecord.classList.toggle("clicked");
         btnRecord.innerHTML = "Grabar Verificacion";
         console.log("ended");
+        window.localStorage.setItem(eventList,
+          JSON.stringify(lList)
+        )
       });
     }
   };
@@ -92,7 +109,7 @@ window.onload = () => {
     //   })
     // );
   });
-};
+// };
 
 
 // const con = document.querySelector(".con");
